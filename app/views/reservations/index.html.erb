@@ -1,0 +1,20 @@
+<p style="color: blue"></p>
+
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %>"><%= value %></div>
+<% end %>
+
+<%= form_tag import_reservations_path, multipart: true do %>
+  <%= file_field_tag :file, accept: ".csv" %>
+  <%= submit_tag "Visualiser" %>
+<% end %>
+
+<h1>
+  Reservations:
+  <%= @reservations.count%>
+</h1>
+<div>
+  <% @reservations.each do |reservation| %>
+    <%= render reservation%>
+  <% end %>
+</div>

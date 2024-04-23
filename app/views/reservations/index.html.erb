@@ -1,20 +1,28 @@
-<p style="color: blue"></p>
-
-<% flash.each do |key, value| %>
-  <div class="alert alert-<%= key %>"><%= value %></div>
-<% end %>
-
-<%= form_tag import_reservations_path, multipart: true do %>
-  <%= file_field_tag :file, accept: ".csv" %>
-  <%= submit_tag "Visualiser" %>
-<% end %>
-
-<h1>
-  Reservations:
-  <%= @reservations.count%>
-</h1>
-<div>
-  <% @reservations.each do |reservation| %>
-    <%= render reservation%>
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>"><%= value %></div>
   <% end %>
+
+
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <%= form_tag import_reservations_path, multipart: true, class: "mb-4" do %>
+        <div class="form-group mb-3">
+          <%= label_tag :file, "Sélectionner un fichier CSV" %>
+          <%= file_field_tag :file, accept: ".csv", class: "form-control-file" %>
+        </div>
+        <%= submit_tag "Charger", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+
+
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <button class="btn btn-secondary">
+        <%= link_to "Analyse", analyse_path, class: "text-white" %>
+      </button>
+    </div>
+  </div>
 </div>

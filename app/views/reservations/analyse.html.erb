@@ -1,0 +1,62 @@
+<!-- app/views/reservations/analyse.html.erb -->
+
+<h1>Reservations Analysis</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Numero billet</th>
+      <th>Reservation</th>
+      <th>Date reservation</th>
+      <th>Heure reservation</th>
+      <th>Cle spectacle</th>
+      <th>Spectacle</th>
+      <th>Cle representation</th>
+      <th>Representation</th>
+      <th>Date representation</th>
+      <th>Heure representation</th>
+      <th>Date fin representation</th>
+      <th>Heure fin representation</th>
+      <th>Prix</th>
+      <th>Type de produit</th>
+      <th>Filiere de vente</th>
+      <th>Nom</th>
+      <th>Prenom</th>
+      <th>Email</th>
+      <th>Adresse</th>
+      <th>Code postal</th>
+      <th>Pays</th>
+      <th>Age</th>
+      <th>Sexe</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reservations.each do |reservation| %>
+      <tr>
+        <td><%= reservation.numero_billet %></td>
+        <td><%= reservation.numero_reservation %></td>
+        <td><%= reservation.date_reservation %></td>
+        <td><%= reservation.heure_reservation %></td>
+        <td><%= reservation.cle_spectacle %></td>
+        <td><%= reservation.spectacle %></td>
+        <td><%= reservation.cle_representation %></td>
+        <td><%= reservation.representation %></td>
+        <td><%= reservation.date_representation %></td>
+        <td><%= reservation.heure_representation %></td>
+        <td><%= reservation.date_fin %></td>
+        <td><%= reservation.heure_fin %></td>
+        <td><%= reservation.prix %></td>
+        <td><%= reservation.type_de_produit %></td>
+        <td><%= reservation.filiere %></td>
+        <td><%= reservation.nom %></td>
+        <td><%= reservation.prenom %></td>
+        <td><%= reservation.email %></td>
+        <td><%= reservation.adresse %></td>
+        <td><%= reservation.code_postal %></td>
+        <td><%= reservation.pays %></td>
+        <td><%= reservation.age %></td>
+        <td><%= reservation.sexe %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,27 +1,27 @@
-  <% flash.each do |key, value| %>
-    <div class="alert alert-<%= key %>"><%= value %></div>
-  <% end %>
-
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %> position-absolute top-0 start-50 translate-middle-x"><%= value %></div>
+<% end %>
 
 <div class="container">
   <div class="row mt-5">
     <div class="col-md-6">
       <%= form_tag import_reservations_path, multipart: true, class: "mb-4" do %>
         <div class="form-group mb-3">
-          <%= label_tag :file, "Sélectionner un fichier CSV" %>
+          <%= label_tag :file, "Sélectionner un fichier CSV", class:"p-3" %>
           <%= file_field_tag :file, accept: ".csv", class: "form-control-file" %>
         </div>
-        <%= submit_tag "Charger", class: "btn btn-primary" %>
+        <%= submit_tag "Charger", class: "btn btn-primary btn-block" %>
       <% end %>
     </div>
   </div>
 
 
-
   <div class="row mt-3">
     <div class="col-md-6">
+      <hr>
+      <p class="mt-4">Analyse du fichier précédemment chargé</p>
       <button class="btn btn-secondary">
-        <%= link_to "Analyse", analyse_path, class: "text-white" %>
+        <%= link_to "Analyse", analyse_reservations_path, class: "text-white" %>
       </button>
     </div>
   </div>

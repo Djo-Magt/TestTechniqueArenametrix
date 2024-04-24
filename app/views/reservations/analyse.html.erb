@@ -1,62 +1,55 @@
-<!-- app/views/reservations/analyse.html.erb -->
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <h1 class="mb-4">Analyse du fichier <%= @filename %></h1>
+    </div>
+  </div>
 
-<h1>Reservations Analysis</h1>
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <a href="<%= reservations_path %>" class="btn btn-secondary text-white">Retour</a>
+    </div>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Numero billet</th>
-      <th>Reservation</th>
-      <th>Date reservation</th>
-      <th>Heure reservation</th>
-      <th>Cle spectacle</th>
-      <th>Spectacle</th>
-      <th>Cle representation</th>
-      <th>Representation</th>
-      <th>Date representation</th>
-      <th>Heure representation</th>
-      <th>Date fin representation</th>
-      <th>Heure fin representation</th>
-      <th>Prix</th>
-      <th>Type de produit</th>
-      <th>Filiere de vente</th>
-      <th>Nom</th>
-      <th>Prenom</th>
-      <th>Email</th>
-      <th>Adresse</th>
-      <th>Code postal</th>
-      <th>Pays</th>
-      <th>Age</th>
-      <th>Sexe</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @reservations.each do |reservation| %>
-      <tr>
-        <td><%= reservation.numero_billet %></td>
-        <td><%= reservation.numero_reservation %></td>
-        <td><%= reservation.date_reservation %></td>
-        <td><%= reservation.heure_reservation %></td>
-        <td><%= reservation.cle_spectacle %></td>
-        <td><%= reservation.spectacle %></td>
-        <td><%= reservation.cle_representation %></td>
-        <td><%= reservation.representation %></td>
-        <td><%= reservation.date_representation %></td>
-        <td><%= reservation.heure_representation %></td>
-        <td><%= reservation.date_fin %></td>
-        <td><%= reservation.heure_fin %></td>
-        <td><%= reservation.prix %></td>
-        <td><%= reservation.type_de_produit %></td>
-        <td><%= reservation.filiere %></td>
-        <td><%= reservation.nom %></td>
-        <td><%= reservation.prenom %></td>
-        <td><%= reservation.email %></td>
-        <td><%= reservation.adresse %></td>
-        <td><%= reservation.code_postal %></td>
-        <td><%= reservation.pays %></td>
-        <td><%= reservation.age %></td>
-        <td><%= reservation.sexe %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+
+
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <%= form_tag(analyse_reservations_path, method: :get, remote: true, class: "form-inline", data: { controller: "filter", action: "submit->filter#submitForm"}) do %>
+        <div class="form-group mr-2">
+          <%= label_tag "spectacle", "Spectacle:" %>
+          <%= select_tag :spectacle, options_for_select(Reservation.distinct.pluck(:spectacle).compact.uniq, params[:spectacle]), include_blank: true, class: "form-control" %>
+        </div>
+        <%= submit_tag "Filtrer", class: "btn btn-primary mt-2" %>
+      <% end %>
+    </div>
+  </div>
+
+
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <table class="table table-condensed">
+        <tbody>
+          <tr>
+            <td><strong>Nombre de réservations:</strong></td>
+            <td><%= @nombre_de_resa %></td>
+          </tr>
+          <tr>
+            <td><strong>Nombre d'acheteurs uniques:</strong></td>
+            <td><%= @acheteurs_unique %></td>
+          </tr>
+          <tr>
+            <td><strong>Âge moyen:</strong></td>
+            <td><%= @age_moyen %></td>
+          </tr>
+          <tr>
+            <td><strong>Prix moyen:</strong></td>
+            <td><%= @prix_moyen %> €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

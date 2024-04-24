@@ -8,7 +8,8 @@ class ReservationsController < ApplicationController
     else
       return redirect_to reservations_path, notice: "Seulement CSV" unless file.content_type == "text/csv"
     end
-    filename = file.original_filename
+
+    @filename = file.original_filename
 
     Reservation.destroy_all
 
@@ -41,12 +42,26 @@ class ReservationsController < ApplicationController
       reservation_hash[:sexe] = row["Sexe"]
       Reservation.create(reservation_hash)
     end
-
-    redirect_to reservations_path, notice: "Fichier '#{filename}' importé"
+    flash[:filename] = @filename
+    redirect_to analyse_reservations_path
   end
 
   def analyse
-    @reservations = Reservation.all
+    @reservations = filter_reservations(params)
+    @nombre_de_resa = @reservations.count
+    @acheteurs_unique = @reservations.distinct.pluck(:email).count
+    @age_moyen = @reservations.average(:age).to_i
+    @prix_moyen = @reservations.average(:prix).round(2)
+
+    @filename = flash[:filename]
+  end
+
+  def filter_reservations(params)
+    reservations = Reservation.all
+    if params[:spectacle].present?
+      reservations = reservations.where(spectacle: params[:spectacle])
+    end
+    reservations
   end
 
 end

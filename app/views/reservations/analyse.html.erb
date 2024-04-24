@@ -41,7 +41,11 @@
           </tr>
           <tr>
             <td><strong>Âge moyen:</strong></td>
-            <td><%= @age_moyen %></td>
+              <% if @age_moyen == 0 %>
+                <td>N/A</td>
+              <% else %>
+                <td><%= @age_moyen %></td>
+              <% end %>
           </tr>
           <tr>
             <td><strong>Prix moyen:</strong></td>

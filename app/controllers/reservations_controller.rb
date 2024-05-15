@@ -8,8 +8,12 @@ class ReservationsController < ApplicationController
     cloudinary_file = Cloudinary::Downloader.download("https://res.cloudinary.com/dsyc05bkd/raw/upload/v1715783452/development/#{file_key}")
     csv_data = cloudinary_file.force_encoding('UTF-8')
     csv = CSV.parse(csv_data, headers: :first_row, col_sep: ';')
-    pars_csv(csv, file_id)
 
+    Reservation.destroy_all
+
+    pars_csv(csv, file_id)
+    @filename = params[:commit]
+    flash[:filename] = @filename
     redirect_to reservations_path
   end
 
@@ -33,6 +37,7 @@ class ReservationsController < ApplicationController
 
 
   private
+
   def pars_csv(csv, file_id)
     csv.each do |row|
       reservation_hash = {}

@@ -1,7 +1,11 @@
 <div class="container">
   <div class="row mt-5">
     <div class="col-md-12 text-center">
-      <h1 class="mb-4">Analyse du fichier <%= @filename %></h1>
+      <h1 class="mb-4">Analyse du fichier
+        <span class="badge bg-primary">
+          <%= @filename %>
+        </span>
+      </h1>
     </div>
   </div>
 
@@ -10,6 +14,7 @@
       <a href="<%= root_path %>" class="btn btn-secondary text-white">Retour</a>
     </div>
   </div>
+
 
 
   <div class="row mt-5">

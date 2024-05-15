@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  root to: redirect("/reservations")
+  root to: "file_items#index"
+
+  resources :file_items, only: [:create, :destroy]
 
   resources :reservations, only: [:index] do
     collection do
-      post :import
-      get :filter_by_spectacle
+      post :create
       get :analyse
     end
   end

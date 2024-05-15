@@ -7,6 +7,9 @@ export default class extends Controller {
     event.preventDefault();
 
     const formData = new FormData(this.formTarget);
+    const spectacleValue = this.formTarget.querySelector('[name="spectacle"]').value;
+
+    formData.append('spectacle', spectacleValue);
 
     fetch(this.formTarget.action, {
       method: this.formTarget.method,

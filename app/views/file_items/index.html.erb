@@ -1,0 +1,21 @@
+<div class="container">
+  <h1>Ajout des fichiers</h1>
+
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %> position-absolute top-0 start-50 translate-middle-x"><%= value %></div>
+  <% end %>
+
+  <div class="container">
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <%= simple_form_for @file_item, html: { multipart: true }, class: "mb-4" do |f| %>
+          <%= f.input :csv_file, as: :file, label: "Fichier CSV", input_html: { accept: ".csv" } %>
+          <%= f.button :submit, "Charger", class: "btn btn-primary btn-block" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% @file_items.each do |file| %>
+    <%= file.name  %>
+  <% end %>
+</div>

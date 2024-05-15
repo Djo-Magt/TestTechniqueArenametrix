@@ -1,20 +1,55 @@
 require 'csv'
 
 class ReservationsController < ApplicationController
-  def import
+
+  def index
+  end
+
+  def create
     file = params[:file]
     if file.nil?
       return redirect_to reservations_path, notice: "Pas de fichier"
     else
       return redirect_to reservations_path, notice: "Seulement CSV" unless file.content_type == "text/csv"
     end
-
     @filename = file.original_filename
-
-    Reservation.destroy_all
+    flash[:filename] = @filename
 
     csv_data = file.read
     csv = CSV.parse(csv_data, headers: :first_row, col_sep: ';')
+    @new_file = FileItem.create(name: file.original_filename, data: csv)
+    pars_csv(csv, @new_file)
+    redirect_to analyse_reservations_path(new_file_id: @new_file.id)
+  end
+
+  def analyse
+    @new_file = FileItem.find(params[:new_file_id])
+    @reservations = filter_reservations.where(file_item_id: @new_file.id)
+    @nombre_de_resa = @reservations.count
+    @acheteurs_unique = @reservations.distinct.pluck(:email).count
+    @age_moyen = @reservations.average(:age).to_i
+    @prix_moyen = @reservations.average(:prix).round(2)
+    @filename = flash[:filename]
+  end
+
+  def filter_reservations
+    reservations = Reservation.all
+    if params[:new_file_id].present?
+      reservations = reservations.where(file_item_id: params[:new_file_id])
+    end
+    reservations
+  end
+
+
+  private
+
+  def reservation_params
+  end
+
+  def set_reservation
+  end
+
+  def pars_csv(csv, new_file)
     csv.each do |row|
       reservation_hash = {}
       reservation_hash[:numero_billet] = row["Numero billet"]
@@ -40,28 +75,8 @@ class ReservationsController < ApplicationController
       reservation_hash[:pays] = row["Pays"]
       reservation_hash[:age] = row["Age"]
       reservation_hash[:sexe] = row["Sexe"]
+      reservation_hash[:file_item] = new_file
       Reservation.create(reservation_hash)
     end
-    flash[:filename] = @filename
-    redirect_to analyse_reservations_path
   end
-
-  def analyse
-    @reservations = filter_reservations(params)
-    @nombre_de_resa = @reservations.count
-    @acheteurs_unique = @reservations.distinct.pluck(:email).count
-    @age_moyen = @reservations.average(:age).to_i
-    @prix_moyen = @reservations.average(:prix).round(2)
-
-    @filename = flash[:filename]
-  end
-
-  def filter_reservations(params)
-    reservations = Reservation.all
-    if params[:spectacle].present?
-      reservations = reservations.where(spectacle: params[:spectacle])
-    end
-    reservations
-  end
-
 end

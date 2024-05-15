@@ -1,0 +1,9 @@
+  <div class="container">
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <%= simple_form_for file, html: { multipart: true }, class: "mb-4" do |f| %>
+          <%= f.input :csv_file, as: :file, label: "Fichier CSV", input_html: { accept: ".csv" } %>
+          <%= f.button :submit, "Charger", class: "btn btn-primary btn-block" %>
+      <% end %>
+    </div>
+  </div>

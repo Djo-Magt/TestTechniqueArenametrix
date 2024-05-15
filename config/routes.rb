@@ -3,10 +3,9 @@ Rails.application.routes.draw do
 
   resources :file_items, only: [:create, :destroy]
 
-  resources :reservations, only: [:index] do
+  resources :reservations, only: [:create] do
     collection do
-      post :create
-      get :analyse
+      get :show
     end
   end
 end

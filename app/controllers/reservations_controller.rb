@@ -2,29 +2,20 @@ require 'csv'
 
 class ReservationsController < ApplicationController
 
-  def index
-  end
-
   def create
-    file = params[:file]
-    if file.nil?
-      return redirect_to reservations_path, notice: "Pas de fichier"
-    else
-      return redirect_to reservations_path, notice: "Seulement CSV" unless file.content_type == "text/csv"
-    end
-    @filename = file.original_filename
-    flash[:filename] = @filename
-
-    csv_data = file.read
+    file_key = params[:file_key]
+    file_id = params[:file_id]
+    cloudinary_file = Cloudinary::Downloader.download("https://res.cloudinary.com/dsyc05bkd/raw/upload/v1715783452/development/#{file_key}")
+    csv_data = cloudinary_file.force_encoding('UTF-8')
     csv = CSV.parse(csv_data, headers: :first_row, col_sep: ';')
-    @new_file = FileItem.create(name: file.original_filename, data: csv)
-    pars_csv(csv, @new_file)
-    redirect_to analyse_reservations_path(new_file_id: @new_file.id)
+    pars_csv(csv, file_id)
+
+    redirect_to reservations_path
   end
 
-  def analyse
-    @new_file = FileItem.find(params[:new_file_id])
-    @reservations = filter_reservations.where(file_item_id: @new_file.id)
+
+  def show
+    @reservations = Reservation.all
     @nombre_de_resa = @reservations.count
     @acheteurs_unique = @reservations.distinct.pluck(:email).count
     @age_moyen = @reservations.average(:age).to_i
@@ -33,23 +24,16 @@ class ReservationsController < ApplicationController
   end
 
   def filter_reservations
-    reservations = Reservation.all
-    if params[:new_file_id].present?
-      reservations = reservations.where(file_item_id: params[:new_file_id])
-    end
-    reservations
+    # reservations = Reservation.all
+    # if params[:new_file_id].present?
+    #   reservations = reservations.where(file_item_id: params[:new_file_id])
+    # end
+    # reservations
   end
 
 
   private
-
-  def reservation_params
-  end
-
-  def set_reservation
-  end
-
-  def pars_csv(csv, new_file)
+  def pars_csv(csv, file_id)
     csv.each do |row|
       reservation_hash = {}
       reservation_hash[:numero_billet] = row["Numero billet"]
@@ -75,8 +59,9 @@ class ReservationsController < ApplicationController
       reservation_hash[:pays] = row["Pays"]
       reservation_hash[:age] = row["Age"]
       reservation_hash[:sexe] = row["Sexe"]
-      reservation_hash[:file_item] = new_file
+      reservation_hash[:file_item_id] = file_id
       Reservation.create(reservation_hash)
     end
   end
+
 end

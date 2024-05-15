@@ -5,17 +5,21 @@
     <div class="alert alert-<%= key %> position-absolute top-0 start-50 translate-middle-x"><%= value %></div>
   <% end %>
 
-  <div class="container">
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <%= simple_form_for @file_item, html: { multipart: true }, class: "mb-4" do |f| %>
-          <%= f.input :csv_file, as: :file, label: "Fichier CSV", input_html: { accept: ".csv" } %>
-          <%= f.button :submit, "Charger", class: "btn btn-primary btn-block" %>
-      <% end %>
-    </div>
-  </div>
+  <%= render "form", file: @file_item %>
 
   <% @file_items.each do |file| %>
-    <%= file.name  %>
-  <% end %>
+    <div class="list-group mt-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <%= form_with(url: reservations_path, method: :post, local: true) do |form| %>
+          <%= form.hidden_field :file_id, value: file.id %>
+          <%= form.hidden_field :file_key, value: file.csv_file.key %>
+          <%= form.submit file.csv_file.filename, class: "list-group-item list-group-item-action" %>
+        <% end %>
+        <%= link_to "x", file_item_path(file),
+          data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+          class: "text-danger"
+        %>
+      </div>
+    </div>
+<% end %>
 </div>

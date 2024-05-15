@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <h1 class="mb-4">Analyse du fichier <%= @filename %></h1>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <a href="<%= root_path %>" class="btn btn-secondary text-white">Retour</a>
+    </div>
+  </div>
+
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <table class="table table-condensed">
+        <tbody>
+          <tr>
+            <td><strong>Nombre de réservations:</strong></td>
+            <td><%= @nombre_de_resa %></td>
+          </tr>
+          <tr>
+            <td><strong>Nombre d'acheteurs uniques:</strong></td>
+            <td><%= @acheteurs_unique %></td>
+          </tr>
+          <tr>
+            <td><strong>Âge moyen:</strong></td>
+              <% if @age_moyen == 0 %>
+                <td>N/A</td>
+              <% else %>
+                <td><%= @age_moyen %></td>
+              <% end %>
+          </tr>
+          <tr>
+            <td><strong>Prix moyen:</strong></td>
+            <td><%= @prix_moyen %> €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -1,4 +1,5 @@
 class FileItemsController < ApplicationController
+  before_action :set_file_params, only: [:destroy]
 
   def index
     @file_items = FileItem.all
@@ -7,7 +8,6 @@ class FileItemsController < ApplicationController
 
   def create
     @file = FileItem.new(file_item_params)
-    raise
     if @file.save
       redirect_to root_path
     else
@@ -18,7 +18,7 @@ class FileItemsController < ApplicationController
   def destroy
     @file_item = FileItem.find(params[:id])
     @file_item.destroy
-    redirect_to reservations_path
+    redirect_to root_path
   end
 
 

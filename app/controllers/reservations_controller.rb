@@ -5,13 +5,13 @@ class ReservationsController < ApplicationController
   def create
     file_key = params[:file_key]
     file_id = params[:file_id]
-    cloudinary_file = Cloudinary::Downloader.download("https://res.cloudinary.com/dsyc05bkd/raw/upload/v1715783452/development/#{file_key}")
-    csv_data = cloudinary_file.force_encoding('UTF-8')
-    csv = CSV.parse(csv_data, headers: :first_row, col_sep: ';')
-
-    Reservation.destroy_all
-
-    pars_csv(csv, file_id)
+    if Reservation.find_by(file_item: file_id).nil?
+      cloudinary_file = Cloudinary::Downloader.download("https://res.cloudinary.com/dsyc05bkd/raw/upload/v1715783452/development/#{file_key}")
+      csv_data = cloudinary_file.force_encoding('UTF-8')
+      Reservation.destroy_all
+      csv = CSV.parse(csv_data, headers: :first_row, col_sep: ';')
+      pars_csv(csv, file_id)
+    end
     @filename = params[:commit]
     flash[:filename] = @filename
     redirect_to reservations_path
@@ -19,7 +19,7 @@ class ReservationsController < ApplicationController
 
 
   def show
-    @reservations = Reservation.all
+    @reservations = filter_reservations(params[:spectacle])
     @nombre_de_resa = @reservations.count
     @acheteurs_unique = @reservations.distinct.pluck(:email).count
     @age_moyen = @reservations.average(:age).to_i
@@ -27,16 +27,16 @@ class ReservationsController < ApplicationController
     @filename = flash[:filename]
   end
 
-  def filter_reservations
-    # reservations = Reservation.all
-    # if params[:new_file_id].present?
-    #   reservations = reservations.where(file_item_id: params[:new_file_id])
-    # end
-    # reservations
-  end
-
 
   private
+
+  def filter_reservations(spectacle)
+    if spectacle
+      Reservation.where(spectacle: spectacle)
+    else
+      Reservation.all
+    end
+  end
 
   def pars_csv(csv, file_id)
     csv.each do |row|

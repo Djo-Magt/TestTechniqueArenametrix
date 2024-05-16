@@ -15,6 +15,21 @@
     </div>
   </div>
 
+ <div class="row mt-5">
+    <div class="col-md-6">
+      <%= form_tag(reservations_path, method: :get, remote: true, class: "form-inline") do %>
+        <div class="form-group mr-2">
+          <%= label_tag "spectacle", "Spectacle:" %>
+          <%= select_tag :spectacle,
+               options_for_select(Reservation.distinct.pluck(:spectacle).compact.uniq, params[:spectacle]),
+               include_blank: true,
+               name: "spectacle",
+               class: "form-control"%>
+        </div>
+        <%= submit_tag "Filtrer", class: "btn btn-primary mt-2" %>
+      <% end %>
+    </div>
+  </div>
 
 
   <div class="row mt-5">
